@@ -1,0 +1,6 @@
+{
+  "name": "BHODT - Digital Tools Marketplace",
+  "description": "Powerful digital tools, software utilities, and development solutions built by Black Har Official Developing Team (BHODT).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

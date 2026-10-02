@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard · BHODT AI</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="icon" type="image/jpeg" href="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg">
+</head>
+<body>
+  <!-- Ambient Red/Blue Futuristic Glows -->
+  <div class="dashboard-ambient">
+    <div class="ambient-blue"></div>
+    <div class="ambient-red"></div>
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <a href="/" class="sidebar-brand">
+      <img src="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg" alt="BHODT Logo" class="sidebar-logo">
+      <div>
+        <div style="font-weight:800;font-size:15px;letter-spacing:0.5px;color:#fff;">BHODT AI</div>
+        <div style="font-size:10px;font-family:'JetBrains Mono';color:#00E5FF;">24/7 DASHBOARD</div>
+      </div>
+    </a>
+
+    <nav class="sidebar-nav">
+      <a href="/dashboard.html" class="nav-item active">
+        <span>⚡ Overview</span>
+      </a>
+      <a href="/profile.html" class="nav-item">
+        <span>👤 User Profile</span>
+      </a>
+      <a href="/settings.html" class="nav-item">
+        <span>⚙️ Account Settings</span>
+      </a>
+      <a href="/#marketplace-section" class="nav-item">
+        <span>🛍️ Marketplace</span>
+      </a>
+      <!-- Admin Link visible to admins -->
+      <a href="/admin/dashboard.html" id="nav-admin-link" class="nav-item" style="display:none;color:#FF1744;border-color:rgba(255,23,68,0.3);background:rgba(255,23,68,0.08);">
+        <span>🛡️ Admin Portal</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button id="btn-logout" class="btn-logout">
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main View Area -->
+  <div class="main-wrapper">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div>
+        <h2 id="dash-welcome-text" style="font-size:18px;font-weight:800;letter-spacing:-0.5px;">Welcome Back!</h2>
+        <span style="font-size:12px;color:#94a3b8;">BHODT Cyber Development & AI Operations</span>
+      </div>
+
+      <div class="user-badge">
+        <span id="dash-user-role" class="badge badge-user">USER</span>
+        <div class="user-avatar" id="dash-user-avatar">U</div>
+        <div style="text-align:right;">
+          <div id="dash-user-name" style="font-weight:700;font-size:13px;">User</div>
+          <div id="dash-user-email" style="font-size:11px;color:#94a3b8;">user@email.com</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="content-area">
+      <!-- Top Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card blue-border">
+          <div class="stat-label">AI Conversations</div>
+          <div class="stat-val" id="stat-conversations-count">0</div>
+          <div style="font-size:11px;color:#00E5FF;">24/7 Persistent History</div>
+        </div>
+
+        <div class="stat-card red-border">
+          <div class="stat-label">Saved Favorites</div>
+          <div class="stat-val" id="stat-favorites-count">0</div>
+          <div style="font-size:11px;color:#ff8099;">Marketplace Tools</div>
+        </div>
+
+        <div class="stat-card blue-border">
+          <div class="stat-label">Security Shield</div>
+          <div class="stat-val" style="color:#00FF66;font-size:22px;">ACTIVE</div>
+          <div style="font-size:11px;color:#94a3b8;">Bcrypt + JWT Authenticated</div>
+        </div>
+
+        <div class="stat-card red-border">
+          <div class="stat-label">Direct Support</div>
+          <div class="stat-val" style="color:#00E5FF;font-size:20px;">ONLINE</div>
+          <div style="font-size:11px;color:#94a3b8;">Telegram & WhatsApp</div>
+        </div>
+      </div>
+
+      <!-- Dashboard Layout Grid -->
+      <div class="dashboard-grid">
+        <!-- Left: Recent AI Conversations -->
+        <section class="card-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span style="color:#00E5FF;">🤖</span> Recent AI Conversations
+            </h3>
+            <a href="/#marketplace-section" style="font-size:12px;color:#00FF66;text-decoration:none;font-weight:700;">
+              + New Chat
+            </a>
+          </div>
+
+          <div id="conversations-container" class="conv-list">
+            <div style="text-align:center;padding:24px;color:#94a3b8;">Loading conversations...</div>
+          </div>
+        </section>
+
+        <!-- Right: Notifications & Quick Actions -->
+        <div style="display:flex;flex-direction:column;gap:24px;">
+          <!-- Quick AI Assistant Action -->
+          <div class="card-panel" style="border-color:rgba(0,229,255,0.3);background:linear-gradient(135deg, rgba(0,229,255,0.06), rgba(255,23,68,0.06));">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <span style="font-size:20px;">⚡</span>
+              <strong style="color:#00E5FF;font-size:15px;">BHODT AI 24/7</strong>
+            </div>
+            <p style="font-size:12px;color:#cbd5e1;line-height:1.5;margin-bottom:16px;">
+              Ask product questions in English or Sinhala, inspect live pricing in LKR, and get instant Telegram order links.
+            </p>
+            <a href="/#marketplace-section" style="display:block;text-align:center;padding:10px;border-radius:10px;background:#00FF66;color:#000;font-weight:800;font-size:12px;text-decoration:none;">
+              Launch AI Assistant
+            </a>
+          </div>
+
+          <!-- Saved Favorites -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">⭐ Favorite Tools</h3>
+            </div>
+            <div id="favorites-container">
+              <p style="color:#94a3b8;font-size:12px;">Loading favorites...</p>
+            </div>
+          </div>
+
+          <!-- Notifications -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">🔔 Notifications</h3>
+            </div>
+            <div id="notifications-container">
+              <p style="color:#94a3b8;font-size:12px;">Loading notifications...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/auth.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

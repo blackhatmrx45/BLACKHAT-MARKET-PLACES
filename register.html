@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account · BHODT AI</title>
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="icon" type="image/jpeg" href="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg">
+</head>
+<body>
+  <!-- Ambient Cyber Lighting Background -->
+  <div class="cyber-bg">
+    <div class="glow-orb-blue"></div>
+    <div class="glow-orb-red"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Header Lockup -->
+  <header class="auth-header">
+    <a href="/" class="brand-lockup">
+      <img src="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg" alt="BHODT Logo" class="brand-logo">
+      <span class="brand-text">BHODT AI</span>
+    </a>
+    <a href="/login.html" class="back-link">
+      Already have an account? <strong style="color:#00E5FF;">Log In</strong>
+    </a>
+  </header>
+
+  <!-- Register Card -->
+  <main class="auth-container">
+    <div class="auth-card">
+      <h1 class="card-title">Join BHODT AI</h1>
+      <p class="card-subtitle">Create your personal AI account to save conversations, track developer tools, and unlock 24/7 AI features.</p>
+
+      <div id="alert-box" class="alert-box"></div>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label" for="full_name">Full Name</label>
+          <input
+            type="text"
+            id="full_name"
+            class="form-input"
+            placeholder="e.g. Alex Vance"
+            required
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            class="form-input"
+            placeholder="e.g. cyber_dev"
+            required
+            autocomplete="username"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            class="form-input"
+            placeholder="e.g. dev@company.com"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="password"
+              class="form-input"
+              placeholder="Minimum 8 characters"
+              required
+              autocomplete="new-password"
+            >
+            <button type="button" id="toggle-pwd" class="toggle-pwd">Show</button>
+          </div>
+          <!-- Password Strength Indicator -->
+          <div class="strength-meter">
+            <div id="strength-bar" class="strength-bar"></div>
+          </div>
+          <span id="strength-text" class="strength-text">Password strength: Enter at least 8 characters</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirm_password">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm_password"
+            class="form-input"
+            placeholder="Re-enter your password"
+            required
+            autocomplete="new-password"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="terms" required>
+            <span>I accept the <a href="/#trust-section" target="_blank" class="auth-link">Terms & Security Policy</a></span>
+          </label>
+        </div>
+
+        <button type="submit" id="btn-submit" class="btn-primary">
+          <span id="btn-text">Create Account</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already registered? <a href="/login.html" class="auth-link">Sign in here</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/auth.js"></script>
+  <script>
+    // Password toggle
+    const pwdInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('toggle-pwd');
+    toggleBtn.addEventListener('click', () => {
+      const isPwd = pwdInput.type === 'password';
+      pwdInput.type = isPwd ? 'text' : 'password';
+      toggleBtn.textContent = isPwd ? 'Hide' : 'Show';
+    });
+
+    // Password strength check
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthText = document.getElementById('strength-text');
+    pwdInput.addEventListener('input', () => {
+      const val = pwdInput.value;
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      if (val.length === 0) {
+        strengthBar.style.width = '0%';
+        strengthText.textContent = 'Password strength: Enter at least 8 characters';
+      } else if (score <= 1) {
+        strengthBar.style.width = '25%';
+        strengthBar.style.background = '#FF1744';
+        strengthText.textContent = 'Weak: Add numbers, symbols or uppercase letters';
+      } else if (score === 2 || score === 3) {
+        strengthBar.style.width = '65%';
+        strengthBar.style.background = '#00E5FF';
+        strengthText.textContent = 'Medium: Good password';
+      } else {
+        strengthBar.style.width = '100%';
+        strengthBar.style.background = '#00FF66';
+        strengthText.textContent = 'Strong: Excellent cyber security strength';
+      }
+    });
+
+    // Form submit
+    const form = document.getElementById('register-form');
+    const alertBox = document.getElementById('alert-box');
+    const btnSubmit = document.getElementById('btn-submit');
+    const btnText = document.getElementById('btn-text');
+
+    function showAlert(msg, isSuccess = false) {
+      alertBox.textContent = msg;
+      alertBox.className = `alert-box ${isSuccess ? 'success' : 'error'}`;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.style.display = 'none';
+
+      const full_name = document.getElementById('full_name').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = pwdInput.value;
+      const confirm_password = document.getElementById('confirm_password').value;
+      const terms = document.getElementById('terms').checked;
+
+      if (password !== confirm_password) {
+        showAlert('Passwords do not match.');
+        return;
+      }
+
+      btnSubmit.disabled = true;
+      btnText.textContent = 'Creating Account...';
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ full_name, username, email, password, confirm_password, terms }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || 'Registration failed');
+        }
+
+        showAlert('Account created successfully! Redirecting to Dashboard...', true);
+        window.BhodtAuth.setToken(data.token);
+        window.BhodtAuth.setUser(data.user);
+
+        setTimeout(() => {
+          window.location.href = '/dashboard.html';
+        }, 1000);
+      } catch (err) {
+        showAlert(err.message);
+        btnSubmit.disabled = false;
+        btnText.textContent = 'Create Account';
+      }
+    });
+  </script>
+</body>
+</html>

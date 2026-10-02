@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings · BHODT AI</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="icon" type="image/jpeg" href="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg">
+</head>
+<body>
+  <div class="dashboard-ambient">
+    <div class="ambient-blue"></div>
+    <div class="ambient-red"></div>
+  </div>
+
+  <aside class="sidebar">
+    <a href="/" class="sidebar-brand">
+      <img src="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg" alt="BHODT Logo" class="sidebar-logo">
+      <div>
+        <div style="font-weight:800;font-size:15px;color:#fff;">BHODT AI</div>
+        <div style="font-size:10px;font-family:'JetBrains Mono';color:#00E5FF;">24/7 DASHBOARD</div>
+      </div>
+    </a>
+
+    <nav class="sidebar-nav">
+      <a href="/dashboard.html" class="nav-item">
+        <span>⚡ Overview</span>
+      </a>
+      <a href="/profile.html" class="nav-item">
+        <span>👤 User Profile</span>
+      </a>
+      <a href="/settings.html" class="nav-item active">
+        <span>⚙️ Account Settings</span>
+      </a>
+      <a href="/#marketplace-section" class="nav-item">
+        <span>🛍️ Marketplace</span>
+      </a>
+      <a href="/admin/dashboard.html" id="nav-admin-link" class="nav-item" style="display:none;color:#FF1744;">
+        <span>🛡️ Admin Portal</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button onclick="window.BhodtAuth.logout()" class="btn-logout">
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div>
+        <h2 style="font-size:18px;font-weight:800;">Account Settings</h2>
+        <span style="font-size:12px;color:#94a3b8;">Security credentials and AI assistant preferences</span>
+      </div>
+      <a href="/dashboard.html" class="back-link">← Return to Dashboard</a>
+    </header>
+
+    <main class="content-area">
+      <div style="max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:24px;">
+        <div id="alert-box" class="alert-box"></div>
+
+        <!-- Change Password Section -->
+        <div class="card-panel red-border">
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;color:#fff;display:flex;align-items:center;gap:8px;">
+            <span style="color:#FF1744;">🔒</span> Change Password
+          </h3>
+
+          <form id="password-form">
+            <div class="form-group">
+              <label class="form-label">Current Password</label>
+              <input type="password" id="current_password" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <input type="password" id="new_password" class="form-input" placeholder="Minimum 8 characters" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Confirm New Password</label>
+              <input type="password" id="confirm_password" class="form-input" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="max-width:220px;background:linear-gradient(135deg, #FF1744, #B7092B);box-shadow:0 0 20px rgba(255,23,68,0.4);">
+              Update Password
+            </button>
+          </form>
+        </div>
+
+        <!-- Preferences & AI Settings -->
+        <div class="card-panel blue-border">
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;color:#fff;display:flex;align-items:center;gap:8px;">
+            <span style="color:#00E5FF;">⚡</span> AI Assistant Preferences
+          </h3>
+
+          <div style="display:flex;flex-direction:column;gap:16px;font-size:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <div>
+                <strong style="color:#fff;">Preferred AI Language</strong>
+                <p style="font-size:12px;color:#94a3b8;">Choose between English and Sinhala (සිංහල)</p>
+              </div>
+              <select id="pref-lang" class="form-input" style="width:130px;padding:8px;">
+                <option value="en">English</option>
+                <option value="si">Sinhala (සිං)</option>
+              </select>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <div>
+                <strong style="color:#fff;">Voice Speech Synthesis</strong>
+                <p style="font-size:12px;color:#94a3b8;">Allow BHODT AI to read answers aloud via Web Speech API</p>
+              </div>
+              <label class="checkbox-wrap">
+                <input type="checkbox" id="pref-voice" checked>
+                <span>Enabled</span>
+              </label>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <strong style="color:#ff8099;">Active Sessions</strong>
+                <p style="font-size:12px;color:#94a3b8;">Terminate all authenticated cookies and tokens</p>
+              </div>
+              <button onclick="window.BhodtAuth.logout()" class="btn-logout" style="width:auto;padding:8px 16px;">
+                Log Out All
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await window.BhodtAuth.checkAuth(true);
+      if (!user) return;
+
+      if (user.role === 'admin') {
+        const adminLink = document.getElementById('nav-admin-link');
+        if (adminLink) adminLink.style.display = 'flex';
+      }
+    });
+
+    document.getElementById('password-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const current_password = document.getElementById('current_password').value;
+      const new_password = document.getElementById('new_password').value;
+      const confirm_password = document.getElementById('confirm_password').value;
+      const alertBox = document.getElementById('alert-box');
+
+      if (new_password !== confirm_password) {
+        alertBox.textContent = 'New passwords do not match.';
+        alertBox.className = 'alert-box error';
+        alertBox.style.display = 'block';
+        return;
+      }
+
+      const token = window.BhodtAuth.getToken();
+      try {
+        const res = await fetch('/api/user/password', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ current_password, new_password, confirm_password })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        alertBox.textContent = data.message;
+        alertBox.className = 'alert-box success';
+        alertBox.style.display = 'block';
+        document.getElementById('password-form').reset();
+      } catch (err) {
+        alertBox.textContent = err.message;
+        alertBox.className = 'alert-box error';
+        alertBox.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
