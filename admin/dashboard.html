@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Operations Center · BHODT AI</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="icon" type="image/jpeg" href="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg">
+</head>
+<body>
+  <div class="dashboard-ambient">
+    <div class="ambient-red"></div>
+    <div class="ambient-blue"></div>
+  </div>
+
+  <aside class="sidebar" style="border-right-color:rgba(255,23,68,0.25);">
+    <a href="/" class="sidebar-brand">
+      <img src="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg" alt="BHODT" class="sidebar-logo" style="border-color:#FF1744;">
+      <div>
+        <div style="font-weight:800;font-size:15px;color:#fff;">BHODT ADMIN</div>
+        <div style="font-size:10px;font-family:'JetBrains Mono';color:#FF1744;">OPERATIONS HUB</div>
+      </div>
+    </a>
+
+    <nav class="sidebar-nav">
+      <a href="#section-stats" class="nav-item active" onclick="switchSection('stats')">
+        <span>📊 Platform Stats</span>
+      </a>
+      <a href="#section-users" class="nav-item" onclick="switchSection('users')">
+        <span>👥 User Management</span>
+      </a>
+      <a href="#section-products" class="nav-item" onclick="switchSection('products')">
+        <span>📦 Product Marketplace</span>
+      </a>
+      <a href="#section-convs" class="nav-item" onclick="switchSection('convs')">
+        <span>🤖 AI Conversations</span>
+      </a>
+      <a href="/dashboard.html" class="nav-item">
+        <span>👤 User View</span>
+      </a>
+      <a href="/" class="nav-item">
+        <span>🛍️ Marketplace</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button onclick="window.BhodtAuth.logout()" class="btn-logout">
+        <span>Exit Admin Portal</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div>
+        <h2 style="font-size:18px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
+          <span style="color:#FF1744;">🛡️</span> Master Control Panel
+        </h2>
+        <span style="font-size:12px;color:#94a3b8;">Real-time management for users, products and 24/7 AI dynamic knowledge</span>
+      </div>
+
+      <div class="user-badge">
+        <span class="badge badge-admin">SUPER ADMIN</span>
+        <div class="user-avatar" style="border-color:#FF1744;color:#FF1744;">A</div>
+        <div style="text-align:right;">
+          <div id="admin-name" style="font-weight:700;font-size:13px;">Administrator</div>
+          <div id="admin-email" style="font-size:11px;color:#94a3b8;">admin@bhodt.dev</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content-area">
+      <!-- Alerts -->
+      <div id="alert-box" class="alert-box" style="margin-bottom:20px;"></div>
+
+      <!-- Section 1: Platform Stats -->
+      <div id="section-stats" class="admin-section">
+        <div class="stats-grid">
+          <div class="stat-card blue-border">
+            <div class="stat-label">Total Registered Users</div>
+            <div class="stat-val" id="stat-users">0</div>
+            <div style="font-size:11px;color:#00E5FF;" id="stat-active-users">Active Accounts: 0</div>
+          </div>
+
+          <div class="stat-card red-border">
+            <div class="stat-label">AI Conversations</div>
+            <div class="stat-val" id="stat-convs">0</div>
+            <div style="font-size:11px;color:#ff8099;" id="stat-msgs">Total Messages: 0</div>
+          </div>
+
+          <div class="stat-card blue-border">
+            <div class="stat-label">Active Marketplace Tools</div>
+            <div class="stat-val" id="stat-products">0</div>
+            <div style="font-size:11px;color:#00FF66;" id="stat-avail-prods">Available: 0</div>
+          </div>
+
+          <div class="stat-card red-border">
+            <div class="stat-label">AI Dynamic Sync</div>
+            <div class="stat-val" style="color:#00FF66;font-size:22px;">ONLINE</div>
+            <div style="font-size:11px;color:#94a3b8;">Direct DB Knowledge Hook</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: User Management -->
+      <div id="section-users" class="admin-section" style="margin-top:24px;">
+        <div class="card-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">👥 User Management Directory</h3>
+            <input
+              type="text"
+              id="user-search"
+              placeholder="Search by name, username or email..."
+              class="form-input"
+              style="max-width:300px;padding:8px 12px;font-size:12px;"
+            >
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody">
+                <tr><td colspan="7" style="text-align:center;padding:20px;color:#94a3b8;">Loading users...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Product Marketplace Management -->
+      <div id="section-products" class="admin-section" style="margin-top:24px;">
+        <div class="card-panel blue-border">
+          <div class="panel-header">
+            <h3 class="panel-title">📦 Marketplace Tools & AI Knowledge Base</h3>
+            <button onclick="openProductModal()" class="btn-primary" style="width:auto;padding:8px 16px;font-size:12px;">
+              + Add New Tool
+            </button>
+          </div>
+
+          <p style="font-size:12px;color:#94a3b8;margin-bottom:16px;">
+            Tools added or modified here are <strong>immediately discovered by BHODT AI</strong> without requiring code rewrites or manual retraining.
+          </p>
+
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tool Name</th>
+                  <th>Category</th>
+                  <th>Price (LKR)</th>
+                  <th>Version</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="products-tbody">
+                <tr><td colspan="7" style="text-align:center;padding:20px;color:#94a3b8;">Loading products...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: AI Conversations Directory -->
+      <div id="section-convs" class="admin-section" style="margin-top:24px;">
+        <div class="card-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">🤖 AI Conversations History</h3>
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Conv ID</th>
+                  <th>User</th>
+                  <th>Title</th>
+                  <th>Messages</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="convs-tbody">
+                <tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">Loading conversations...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add / Edit Product Modal -->
+  <div id="modal-product" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:100;align-items:center;justify-content:center;padding:20px;">
+    <div class="auth-card" style="max-width:540px;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h3 id="modal-product-title" style="font-size:18px;font-weight:bold;">Add New Tool</h3>
+        <button onclick="closeProductModal()" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:18px;">✕</button>
+      </div>
+
+      <form id="product-form">
+        <input type="hidden" id="prod-is-edit" value="false">
+        <div class="form-group">
+          <label class="form-label">Tool ID (e.g. tool-007)</label>
+          <input type="text" id="prod-id" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tool Name</label>
+          <input type="text" id="prod-name" class="form-input" placeholder="e.g. BHODT ApiVault" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="prod-category" class="form-input">
+            <option value="Web Tools">Web Tools</option>
+            <option value="Developer Tools">Developer Tools</option>
+            <option value="Security Tools">Security Tools</option>
+            <option value="AI Tools">AI Tools</option>
+            <option value="Network Tools">Network Tools</option>
+            <option value="Utilities">Utilities</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label class="form-label">Price (LKR)</label>
+            <input type="number" id="prod-price" class="form-input" placeholder="3000" required>
+          </div>
+          <div>
+            <label class="form-label">Version</label>
+            <input type="text" id="prod-version" class="form-input" placeholder="1.0.0" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select id="prod-status" class="form-input">
+            <option value="AVAILABLE">AVAILABLE</option>
+            <option value="UPDATING">UPDATING</option>
+            <option value="COMING SOON">COMING SOON</option>
+            <option value="SOLD OUT">SOLD OUT</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea id="prod-desc" class="form-input" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Platform Requirements</label>
+          <input type="text" id="prod-reqs" class="form-input" value="Windows 10/11, macOS, or Linux">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">License</label>
+          <input type="text" id="prod-license" class="form-input" value="Commercial Single Developer License">
+        </div>
+
+        <button type="submit" id="btn-save-prod" class="btn-primary" style="margin-top:12px;">
+          Save Tool to Database
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+  <script>
+    let currentAdmin = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const ok = await window.BhodtAuth.checkAdmin(true);
+      if (!ok) return;
+
+      currentAdmin = window.BhodtAuth.getUser();
+      if (currentAdmin) {
+        document.getElementById('admin-name').textContent = currentAdmin.full_name;
+        document.getElementById('admin-email').textContent = currentAdmin.email;
+      }
+
+      loadStats();
+      loadUsers();
+      loadProducts();
+      loadConversations();
+
+      document.getElementById('user-search').addEventListener('input', (e) => {
+        loadUsers(e.target.value);
+      });
+    });
+
+    const alertBox = document.getElementById('alert-box');
+    function showAlert(msg, isSuccess = true) {
+      alertBox.textContent = msg;
+      alertBox.className = `alert-box ${isSuccess ? 'success' : 'error'}`;
+      alertBox.style.display = 'block';
+      setTimeout(() => alertBox.style.display = 'none', 4000);
+    }
+
+    async function loadStats() {
+      const token = window.BhodtAuth.getToken();
+      try {
+        const res = await fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${token}` } });
+        const data = await res.json();
+        const s = data.stats;
+
+        document.getElementById('stat-users').textContent = s.totalUsers;
+        document.getElementById('stat-active-users').textContent = `Active Accounts: ${s.activeUsers}`;
+        document.getElementById('stat-convs').textContent = s.totalConversations;
+        document.getElementById('stat-msgs').textContent = `Total Messages: ${s.totalMessages}`;
+        document.getElementById('stat-products').textContent = s.totalProducts;
+        document.getElementById('stat-avail-prods').textContent = `Available: ${s.availableProducts}`;
+      } catch (e) {}
+    }
+
+    async function loadUsers(search = '') {
+      const token = window.BhodtAuth.getToken();
+      try {
+        const res = await fetch(`/api/admin/users?search=${encodeURIComponent(search)}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        const tbody = document.getElementById('users-tbody');
+
+        if (!data.users || data.users.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:16px;">No users found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = data.users.map(u => `
+          <tr>
+            <td style="font-family:'JetBrains Mono';color:#00E5FF;">#${u.id}</td>
+            <td><strong>${u.full_name}</strong><br><span style="font-size:11px;color:#94a3b8;">@${u.username}</span></td>
+            <td>${u.email}</td>
+            <td>
+              <select onchange="updateRole(${u.id}, this.value)" class="form-input" style="padding:4px 8px;font-size:11px;width:auto;">
+                <option value="user" ${u.role === 'user' ? 'selected' : ''}>USER</option>
+                <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>ADMIN</option>
+              </select>
+            </td>
+            <td>
+              <select onchange="updateStatus(${u.id}, this.value)" class="form-input" style="padding:4px 8px;font-size:11px;width:auto;">
+                <option value="active" ${u.account_status === 'active' ? 'selected' : ''}>ACTIVE</option>
+                <option value="inactive" ${u.account_status === 'inactive' ? 'selected' : ''}>INACTIVE</option>
+                <option value="suspended" ${u.account_status === 'suspended' ? 'selected' : ''}>SUSPENDED</option>
+              </select>
+            </td>
+            <td style="font-size:11px;color:#94a3b8;">${new Date(u.created_at).toLocaleDateString()}</td>
+            <td>
+              <button onclick="deleteUser(${u.id})" style="padding:4px 8px;border-radius:6px;background:rgba(255,23,68,0.15);border:1px solid #FF1744;color:#ff8099;font-size:11px;cursor:pointer;">
+                Delete
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {}
+    }
+
+    async function updateRole(userId, role) {
+      const token = window.BhodtAuth.getToken();
+      try {
+        const res = await fetch(`/api/admin/users/${userId}/role`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ role })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        showAlert(data.message);
+        loadStats();
+      } catch (err) {
+        showAlert(err.message, false);
+      }
+    }
+
+    async function updateStatus(userId, status) {
+      const token = window.BhodtAuth.getToken();
+      try {
+        const res = await fetch(`/api/admin/users/${userId}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        showAlert(data.message);
+        loadStats();
+      } catch (err) {
+        showAlert(err.message, false);
+      }
+    }
+
+    async function deleteUser(userId) {
+      if (!confirm(`Are you sure you want to permanently delete user #${userId}?`)) return;
+      const token = window.BhodtAuth.getToken();
+      try {
+        const res = await fetch(`/api/admin/users/${userId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        showAlert(data.message);
+        loadUsers();
+        loadStats();
+      } catch (err) {
+        showAlert(err.message, false);
+      }
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const products = await res.json();
+        const tbody = document.getElementById('products-tbody');
+
+        tbody.innerHTML = products.map(p => `
+          <tr>
+            <td style="font-family:'JetBrains Mono';color:#00E5FF;">${p.id}</td>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.category}</td>
+            <td style="font-family:'JetBrains Mono';color:#00FF66;font-weight:bold;">${p.price} LKR</td>
+            <td>v${p.version}</td>
+            <td><span class="badge ${p.status === 'AVAILABLE' ? 'badge-active' : 'badge-user'}">${p.status}</span></td>
+            <td style="display:flex;gap:6px;">
+              <button onclick='editProduct(${JSON.stringify(p).replace(/'/g, "&apos;")})' style="padding:4px 8px;border-radius:6px;background:rgba(0,229,255,0.15);border:1px solid #00E5FF;color:#00E5FF;font-size:11px;cursor:pointer;">
+                Edit
+              </button>
+              <button onclick="deleteProduct('${p.id}')" style="padding:4px 8px;border-radius:6px;background:rgba(255,23,68,0.15);border:1px solid #FF1744;color:#ff8099;font-size:11px;cursor:pointer;">
+                Delete
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {}
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm(`Delete product ${id} from database and AI knowledge?`)) return;
+      const token = window.BhodtAuth.getToken();
+      try {
+        const res = await fetch(`/api/admin/products/${id}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        showAlert(data.message);
+        loadProducts();
+        loadStats();
+      } catch (e) {}
+    }
+
+    function openProductModal() {
+      document.getElementById('modal-product').style.display = 'flex';
+      document.getElementById('product-form').reset();
+      document.getElementById('prod-is-edit').value = 'false';
+      document.getElementById('prod-id').readOnly = false;
+      document.getElementById('modal-product-title').textContent = 'Add New Tool';
+    }
+
+    function editProduct(p) {
+      document.getElementById('modal-product').style.display = 'flex';
+      document.getElementById('prod-is-edit').value = 'true';
+      document.getElementById('prod-id').value = p.id;
+      document.getElementById('prod-id').readOnly = true;
+      document.getElementById('prod-name').value = p.name;
+      document.getElementById('prod-category').value = p.category;
+      document.getElementById('prod-price').value = p.price;
+      document.getElementById('prod-version').value = p.version;
+      document.getElementById('prod-status').value = p.status;
+      document.getElementById('prod-desc').value = p.description;
+      document.getElementById('prod-reqs').value = p.requirements || '';
+      document.getElementById('prod-license').value = p.license || '';
+      document.getElementById('modal-product-title').textContent = `Edit Tool: ${p.name}`;
+    }
+
+    function closeProductModal() {
+      document.getElementById('modal-product').style.display = 'none';
+    }
+
+    document.getElementById('product-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const token = window.BhodtAuth.getToken();
+      const isEdit = document.getElementById('prod-is-edit').value === 'true';
+      const id = document.getElementById('prod-id').value.trim();
+      const name = document.getElementById('prod-name').value.trim();
+      const category = document.getElementById('prod-category').value;
+      const price = document.getElementById('prod-price').value;
+      const version = document.getElementById('prod-version').value.trim();
+      const status = document.getElementById('prod-status').value;
+      const description = document.getElementById('prod-desc').value.trim();
+      const requirements = document.getElementById('prod-reqs').value.trim();
+      const license = document.getElementById('prod-license').value.trim();
+
+      try {
+        const url = isEdit ? `/api/admin/products/${id}` : '/api/admin/products';
+        const method = isEdit ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ id, name, category, price, version, status, description, requirements, license })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        showAlert(data.message);
+        closeProductModal();
+        loadProducts();
+        loadStats();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    async function loadConversations() {
+      const token = window.BhodtAuth.getToken();
+      try {
+        const res = await fetch('/api/admin/conversations', { headers: { Authorization: `Bearer ${token}` } });
+        const data = await res.json();
+        const tbody = document.getElementById('convs-tbody');
+
+        if (!data.conversations || data.conversations.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:16px;">No conversations yet.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = data.conversations.map(c => `
+          <tr>
+            <td style="font-family:'JetBrains Mono';color:#00E5FF;">#${c.id}</td>
+            <td><strong>@${c.username}</strong></td>
+            <td>${c.title}</td>
+            <td><span class="badge badge-active">${c.messageCount} msgs</span></td>
+            <td style="font-size:11px;color:#94a3b8;">${new Date(c.updated_at).toLocaleString()}</td>
+          </tr>
+        `).join('');
+      } catch (e) {}
+    }
+  </script>
+</body>
+</html>

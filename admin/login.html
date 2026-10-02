@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal Login · BHODT AI</title>
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="icon" type="image/jpeg" href="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg">
+</head>
+<body>
+  <div class="cyber-bg">
+    <div class="glow-orb-red"></div>
+    <div class="glow-orb-blue"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <header class="auth-header">
+    <a href="/" class="brand-lockup">
+      <img src="/src/assets/images/bhodt_black_hat_logo_1790928314687.jpg" alt="BHODT Logo" class="brand-logo" style="border-color:#FF1744;">
+      <span class="brand-text">BHODT ADMIN PORTAL</span>
+    </a>
+    <a href="/" class="back-link">
+      ← Return to Main Site
+    </a>
+  </header>
+
+  <main class="auth-container">
+    <div class="auth-card" style="border-color:rgba(255,23,68,0.4);box-shadow:0 0 40px rgba(0,0,0,0.8),0 0 30px rgba(255,23,68,0.2);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span style="display:inline-block;padding:3px 8px;border-radius:6px;background:rgba(255,23,68,0.2);border:1px solid #FF1744;color:#FF1744;font-size:10px;font-family:'JetBrains Mono';font-weight:bold;">
+          RESTRICTED ACCESS
+        </span>
+      </div>
+      <h1 class="card-title">System Administration</h1>
+      <p class="card-subtitle">Authorize access to manage marketplace products, users, security policies and AI configurations.</p>
+
+      <div id="alert-box" class="alert-box"></div>
+
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label class="form-label" for="identifier">Admin Email or Username</label>
+          <input
+            type="text"
+            id="identifier"
+            class="form-input"
+            value="admin@bhodt.dev"
+            required
+            autocomplete="username"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Security Password</label>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="password"
+              class="form-input"
+              value="Admin@123456"
+              required
+              autocomplete="current-password"
+            >
+            <button type="button" id="toggle-pwd" class="toggle-pwd">Show</button>
+          </div>
+        </div>
+
+        <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:10px;padding:10px 14px;font-size:11px;color:#94a3b8;margin-bottom:20px;">
+          <strong style="color:#00E5FF;">Initial Seed Admin:</strong><br>
+          Email: <code style="color:#fff;">admin@bhodt.dev</code> / Pass: <code style="color:#fff;">Admin@123456</code>
+        </div>
+
+        <button type="submit" id="btn-submit" class="btn-primary" style="background:linear-gradient(135deg, #FF1744, #B7092B);box-shadow:0 0 20px rgba(255,23,68,0.4);">
+          <span id="btn-text">Authenticate as Administrator</span>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <script src="/js/auth.js"></script>
+  <script>
+    const pwdInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('toggle-pwd');
+    toggleBtn.addEventListener('click', () => {
+      const isPwd = pwdInput.type === 'password';
+      pwdInput.type = isPwd ? 'text' : 'password';
+      toggleBtn.textContent = isPwd ? 'Hide' : 'Show';
+    });
+
+    const form = document.getElementById('admin-login-form');
+    const alertBox = document.getElementById('alert-box');
+    const btnSubmit = document.getElementById('btn-submit');
+    const btnText = document.getElementById('btn-text');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.style.display = 'none';
+      btnSubmit.disabled = true;
+      btnText.textContent = 'Verifying Credentials...';
+
+      const identifier = document.getElementById('identifier').value.trim();
+      const password = pwdInput.value;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier, password }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Authentication failed');
+
+        if (data.user.role !== 'admin') {
+          throw new Error('Access denied. This account does not possess administrator privileges.');
+        }
+
+        alertBox.textContent = 'Administrator verified. Redirecting...';
+        alertBox.className = 'alert-box success';
+        alertBox.style.display = 'block';
+
+        window.BhodtAuth.setToken(data.token);
+        window.BhodtAuth.setUser(data.user);
+
+        setTimeout(() => {
+          window.location.href = '/admin/dashboard.html';
+        }, 800);
+      } catch (err) {
+        alertBox.textContent = err.message;
+        alertBox.className = 'alert-box error';
+        alertBox.style.display = 'block';
+        btnSubmit.disabled = false;
+        btnText.textContent = 'Authenticate as Administrator';
+      }
+    });
+  </script>
+</body>
+</html>

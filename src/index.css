@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-display: 'Syne', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Glassmorphism and ambient lighting utilities */
+.glass-panel {
+  background: rgba(17, 17, 17, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Vibrant Neon Red and Green Utility Classes */
+.neon-glow-green {
+  box-shadow: 0 0 20px rgba(0, 255, 102, 0.45), 0 0 40px rgba(0, 255, 102, 0.2);
+}
+
+.neon-glow-red {
+  box-shadow: 0 0 20px rgba(255, 23, 68, 0.5), 0 0 40px rgba(255, 23, 68, 0.3);
+}
+
+.neon-glow-blue {
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.5), 0 0 40px rgba(0, 229, 255, 0.3);
+}
+
+.neon-border-green {
+  border-color: #00FF66;
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.35), inset 0 0 10px rgba(0, 255, 102, 0.1);
+}
+
+.neon-border-red {
+  border-color: #FF1744;
+  box-shadow: 0 0 18px rgba(255, 23, 68, 0.45), inset 0 0 10px rgba(255, 23, 68, 0.15);
+}
+
+.neon-border-blue {
+  border-color: #00E5FF;
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.45), inset 0 0 10px rgba(0, 229, 255, 0.15);
+}
+
+.neon-text-green {
+  color: #00FF66;
+  text-shadow: 0 0 10px rgba(0, 255, 102, 0.6), 0 0 25px rgba(0, 255, 102, 0.35);
+}
+
+.neon-text-red {
+  color: #FF1744;
+  text-shadow: 0 0 12px rgba(255, 23, 68, 0.7), 0 0 28px rgba(255, 23, 68, 0.4);
+}
+
+.neon-text-blue {
+  color: #00E5FF;
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.7), 0 0 28px rgba(0, 229, 255, 0.4);
+}
+
+.neon-badge-green {
+  background: rgba(0, 255, 102, 0.12);
+  border: 1px solid rgba(0, 255, 102, 0.5);
+  color: #00FF66;
+  box-shadow: 0 0 12px rgba(0, 255, 102, 0.25);
+}
+
+.neon-badge-red {
+  background: rgba(255, 23, 68, 0.15);
+  border: 1px solid rgba(255, 23, 68, 0.6);
+  color: #FF1744;
+  box-shadow: 0 0 15px rgba(255, 23, 68, 0.35);
+}
+
+.neon-badge-blue {
+  background: rgba(0, 229, 255, 0.15);
+  border: 1px solid rgba(0, 229, 255, 0.6);
+  color: #00E5FF;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.35);
+}
+
+/* Red and Blue Cyber Atmospheric Animations */
+@keyframes floatOrbBlue {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate(60px, 40px) scale(1.15);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate(-30px, 60px) scale(0.95);
+    opacity: 0.25;
+  }
+}
+
+@keyframes floatOrbRed {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate(-50px, -30px) scale(1.18);
+    opacity: 0.42;
+  }
+  100% {
+    transform: translate(40px, -50px) scale(0.92);
+    opacity: 0.25;
+  }
+}
+
+.anim-orb-blue {
+  animation: floatOrbBlue 14s ease-in-out infinite alternate;
+}
+
+.anim-orb-red {
+  animation: floatOrbRed 16s ease-in-out infinite alternate;
+}
+
+.neon-pulse {
+  animation: neonPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes neonPulse {
+  0% {
+    filter: drop-shadow(0 0 8px rgba(0, 255, 102, 0.4)) drop-shadow(0 0 20px rgba(255, 23, 68, 0.2));
+  }
+  100% {
+    filter: drop-shadow(0 0 16px rgba(0, 255, 102, 0.7)) drop-shadow(0 0 25px rgba(255, 23, 68, 0.4));
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222222;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00FF66;
+  box-shadow: 0 0 8px #00FF66;
+}

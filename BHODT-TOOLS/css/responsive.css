@@ -1,0 +1,68 @@
+/* ==================================================
+   BHODT RESPONSIVE STYLESHEET
+   Breakpoints: 320px, 375px, 425px, 768px, 1024px, 1440px+
+   ================================================== */
+
+@media (max-width: 1024px) {
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .modal-dialog {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-left {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 2.25rem;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .card-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .floating-telegram .telegram-bubble span {
+    display: inline;
+  }
+}
+
+@media (max-width: 425px) {
+  .hero-title {
+    font-size: 1.85rem;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .floating-telegram {
+    bottom: 1rem;
+    right: 1rem;
+  }
+}
