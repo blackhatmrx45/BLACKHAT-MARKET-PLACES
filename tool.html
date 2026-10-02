@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BHODT - Tool Details</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="dark-theme">
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-lockup">
+        <div class="brand-icon">B</div>
+        <span>BHODT</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#marketplace" class="active">Tools</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://t.me/blackhatmrx" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          @blackhatmrx
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 4rem 1.5rem;">
+    <div style="margin-bottom: 2rem;">
+      <a href="index.html#marketplace" style="color: var(--color-primary); font-size: 0.875rem;">← Back to Tools Marketplace</a>
+    </div>
+
+    <div id="standalone-tool-container" class="modal-dialog" style="max-width: 1000px; margin: 0 auto; display: grid;">
+      <!-- Populated via URL param or default -->
+      <div class="modal-left">
+        <img id="detail-img" src="" alt="Tool" style="width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 0.75rem; margin-bottom: 1rem;">
+        <div style="background: var(--card-bg); padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--border); margin-bottom: 1rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.6875rem; color: var(--muted);">PRICE</div>
+          <div id="detail-price" style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--color-primary);"></div>
+        </div>
+        <div style="font-size: 0.75rem; space-y: 0.5rem; color: var(--muted); line-height: 1.8;">
+          <div><strong>Status:</strong> <span id="detail-status"></span></div>
+          <div><strong>Version:</strong> <span id="detail-version"></span></div>
+          <div><strong>Platform:</strong> <span id="detail-platform"></span></div>
+          <div><strong>File Type:</strong> <span id="detail-filetype"></span></div>
+          <div><strong>License:</strong> <span id="detail-license"></span></div>
+          <div><strong>Support:</strong> <span id="detail-support"></span></div>
+        </div>
+      </div>
+      <div class="modal-right">
+        <span id="detail-category" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-primary); font-weight: 700;"></span>
+        <h1 id="detail-title" style="font-family: var(--font-display); font-size: 2rem; margin: 0.25rem 0 0.75rem;"></h1>
+        <p id="detail-desc" style="color: var(--muted); font-size: 0.9375rem; margin-bottom: 1.5rem; line-height: 1.6;"></p>
+
+        <h4 style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.5rem;">Key Features</h4>
+        <ul id="detail-features" style="list-style: none; font-size: 0.8125rem; line-height: 2; margin-bottom: 1.5rem;"></ul>
+
+        <h4 style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.25rem;">System Requirements</h4>
+        <p id="detail-reqs" style="font-size: 0.8125rem; color: var(--muted); margin-bottom: 1.5rem;"></p>
+
+        <button id="detail-buy-btn" class="btn btn-primary btn-block">BUY NOW VIA TELEGRAM</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/products.js"></script>
+  <script src="js/telegram.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const toolId = params.get('id') || 'tool-001';
+      const tool = products.find(p => p.id === toolId) || products[0];
+
+      if (tool) {
+        document.title = `${tool.name} - BHODT Marketplace`;
+        document.getElementById('detail-img').src = tool.image;
+        document.getElementById('detail-title').textContent = tool.name;
+        document.getElementById('detail-desc').textContent = tool.description;
+        document.getElementById('detail-category').textContent = tool.category;
+        document.getElementById('detail-price').textContent = formatLKRPrice(tool.price);
+        document.getElementById('detail-status').textContent = tool.status;
+        document.getElementById('detail-version').textContent = tool.version;
+        document.getElementById('detail-platform').textContent = tool.platform;
+        document.getElementById('detail-filetype').textContent = tool.fileType;
+        document.getElementById('detail-license').textContent = tool.license;
+        document.getElementById('detail-support').textContent = tool.supportInfo;
+        document.getElementById('detail-reqs').textContent = tool.requirements;
+
+        const featuresEl = document.getElementById('detail-features');
+        featuresEl.innerHTML = (tool.features || []).map(f => `<li>✓ ${f}</li>`).join('');
+
+        const buyBtn = document.getElementById('detail-buy-btn');
+        if (tool.status === 'AVAILABLE' || tool.status === 'UPDATING') {
+          buyBtn.onclick = () => buyTool(tool);
+        } else {
+          buyBtn.disabled = true;
+          buyBtn.className = 'btn btn-disabled btn-block';
+          buyBtn.textContent = `NOT AVAILABLE (${tool.status})`;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
